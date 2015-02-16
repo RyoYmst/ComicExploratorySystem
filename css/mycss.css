@@ -1,0 +1,23 @@
+#expect_like_comic{
+					position:absolute;
+					top:50%;
+					left:50%;
+					background-color: #7f7fff;
+					border-radius: 50%;
+					}
+
+
+.titles{
+	position:absolute;
+	/*top:50%;*/
+	background-color":"red";
+}
+
+/*x
+.genres{
+	position:absolute;
+	background-color: #FF657A;
+	border-radius: 50%;
+
+
+}*/
