@@ -55,10 +55,8 @@ def calcDF(expect_like_comics,all_genres):
             else:
                 vec.append(0)
         df["vec"] = vec
-        #df["genres"] = genres
         data.append(df)
     return data
-
 
 def input_calcDF(tf,all_genres):
     df = collections.OrderedDict()

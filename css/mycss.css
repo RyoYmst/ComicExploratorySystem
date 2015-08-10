@@ -1,0 +1,43 @@
+.center{
+	font-size:0px;
+	position:absolute;
+	font-weight: 900;
+	top:40%;
+	left:50%;
+    -moz-background-size:cover;
+	background-size:cover;
+	width:64px;
+	height:91px;
+	/*width:96px;
+	height:136.5px;*/
+}
+
+
+.title{
+	font-size:0px;
+	position:absolute;
+	text-align: top;
+    -moz-background-size:cover;
+	background-size:cover;
+	width:64px;
+	height:91px;
+}
+
+.histories{
+	font-size:0px;
+	position:absolute;
+	text-align: top;
+    -moz-background-size:cover;
+	background-size:cover;
+	width:64px;
+	height:91px;
+}
+
+
+
+#history{
+	position:absolute;
+	/*background-color:#ff0000;*/
+	top:85%;
+	font-size:24px;
+}

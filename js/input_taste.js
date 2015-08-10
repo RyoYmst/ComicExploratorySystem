@@ -25,7 +25,6 @@ function ExpectLikeComic(){
               console.log(msg);
               console.log("error");
         });
-       console.log(tmp)
         return tmp;
 }
 
