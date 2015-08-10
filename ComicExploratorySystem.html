@@ -6,23 +6,29 @@
         ComicExploratorySystem
     </title>
         <!--ライブラリ-->
-        
         <script type="text/javascript" src = "lib/jquery-2.1.3.min.js"></script>
-        <script type="text/javascript" src="lib/jquery.balloon.js"></script>
+        <script type="text/javascript" src = "lib/jquery.balloon.js"></script>
         <!--<link rel="stylesheet" type="text/css" href="css/mycss.css">-->
+    </head>
 
-
-        </head>
 <body>
-    <div id = "test"></div>
+    <form name="js" id ="taste_comic">
+        好きなマンガのタイトルを入力して下さい<br>
+        <textarea name="titles" cols="40" rows="10">ダイヤのA,ヒカルの碁,寄生獣</textarea>
+        <input type ="button" value ="input" id ="input_button"/>
+        <input type ="reset" value ="reset" id ="reset_button"/>
+    </form>
+    
+    <!-- <div id = "test"></div> -->
+    <div id = "comment"></div>
+    <div id = "reccomend"></div>
     <h1>テスト</h1>
 
-<input type ="button" value ="入力完了"  id ="input_button"/>
+    <script type="text/javascript" src = "js/input_taste.js"></script>
+    <script type="text/javascript" src = "js/loaddata.js"></script>
+    <script type="text/javascript" src = "js/main.js"></script>
 
-<script type="text/javascript" src = "js/test.js"></script>
-<script type="text/javascript" src = "js/loaddata.js"></script>
-
-    </body>
+</body>
 
 
 </html>
