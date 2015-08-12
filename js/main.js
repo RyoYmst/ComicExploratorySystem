@@ -1,5 +1,5 @@
 function CreateNodeTopic(genre){
-	var $node = $("<div>").text(genre).addClass("topics");
+	var $node = $("<div>").text(genre).addClass("topic");
 	return $node;
 }
 
@@ -23,17 +23,18 @@ function RecommendComicGenres(title,comic_data){
 
 function spread(topics,r){
 	for (var i=0;i<topics.length; i++){
-		 console.log(topics[i])
-	    // var node = topics[i];
-	    // var centerX = node.offset().left;
-	    // var centerY = node.offset().top;
-	    // var rad = 2*Math.PI * (i/topics.length);
-	    // var x = r * Math.cos(rad) + centerX;
-	    // var y = r * Math.sin(rad) + centerY;
-	    // topics[i].animate({
-	    //   left:x,
-	    //   top:y },"slow");
-	    }
+	    var node = topics[i];
+	    var centerX = node.offset().left;
+	    var centerY = node.offset().top;
+
+	    var rad = 2*Math.PI * (i/topics.length);
+	    var x = r * Math.cos(rad) + centerX + 64/4;
+	    var y = r * Math.sin(rad) + centerY + 91/4;
+	    topics[i].animate({
+	      left:x,
+	      top:y
+	    },"slow");
+	}
 }
 
 $(function(){
@@ -43,16 +44,9 @@ $(function(){
 	$(document).on("click","#input_button",function(){
 	  	var recommend_comic = ExpectLikeComic();
 	  	var recommend_comic_gernes = RecommendComicGenres(recommend_comic[0],comic_data).genres;
-	  	var $genre = $("#genres");
-	  	nodes_genre = NodesTopic(recommend_comic_gernes);
-	  	for (var i = 0; i< nodes_genre.length; i++){
-	  		var each_genre = nodes_genre[i];
-	  		$genre.append(each_genre);
-	  	}
 
-	  	recommend_like_topics = []
+	  	recommend_like_topics = []//共起する語が含まれるtopic
 	  	for (var i =0 ; i< topic_data.length; i++){
-	  		var count = 0;
 	  		for (var j = 0; j< recommend_comic_gernes.length; j++){
 	  			if ($.inArray(recommend_comic_gernes[j],topic_data[i].genre) !== -1){
 	  				recommend_like_topics.push(topic_data[i].genre)
@@ -61,24 +55,31 @@ $(function(){
 	  		}
 	  	}
 
+		nodes_topics = NodesTopic(recommend_like_topics);//関連topicのdiv
+		
 	  	var $topics = $("#topics");
 	  	var $expect_like_comic = $(".center");//中央に提示されるコミック
         var pos = $expect_like_comic.position();
-        console.log(pos);
-        var centerX = pos.left;
-        var centerY = pos.top;
-	  	for (var i = 0; i< recommend_like_topics.length; i++){
-	  		var each_topics = "hoge";//recommend_like_topics[i];
-	  		// $topics.append(each_topics);
-	  	
-	  	}
-	  	r = 200;
-	  	spread(recommend_like_topics,r)
-	  	
+        var centerX = pos.left;//中央のコミックのX座標
+        var centerY = pos.top;//中央のコミックのY座標
 
+	  	for (var i = 0; i< nodes_topics.length; i++){
+	  		var $each_topics = nodes_topics[i];
+	  		console.log($each_topics)
+	  		$topics.append($each_topics);	
+	  		$each_topics.css({
+	  			left:centerX,
+    			top:centerY,
+	  		})
+		}
 
+	  	r = 100;
+	  	spread(nodes_topics,r)
 	  	$("#like_comic_titles").remove();
-
-
 	});
+})
+
+$(document).on("mouseover",".topic",function(){
+	console.log($(this).text());
+
 })
