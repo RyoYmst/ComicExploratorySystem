@@ -16,10 +16,11 @@ function ExpectLikeComic(){
                 tmp.push(data.title,data.genres);
                 var recommend = $("#recommend");
                 var $node = $("<div>").text(data.title).addClass("center");
-                recommend.append($node);
+                recommend.append($node);//centerの画面表示  
                 $(".center").css({
                    "background-image":"url(../~artuhr0912/img/"+ data.title +".jpg)"
                 })
+       		
         })
        .error(function(msg){
               console.log(msg);

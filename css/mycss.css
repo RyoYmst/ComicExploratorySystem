@@ -12,6 +12,13 @@
 	height:136.5px;*/
 }
 
+#topics{
+	border-radius: 10px;
+	height: 20px;
+	width: 20px;
+	background-color:red;
+}
+
 
 .title{
 	font-size:0px;
