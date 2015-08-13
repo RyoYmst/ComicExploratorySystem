@@ -13,7 +13,7 @@ function NodesTopic(genres){
 }
 
 function RecommendComicGenres(title,comic_data){
-	for (var i=0;i<comic_data.length;i++){
+	for (var i=0;i < comic_data.length;i++){
 		db_title = " " + comic_data[i].title + " "
 		if(db_title.indexOf(" " + title + " ") !== -1){
 			return comic_data[i]
@@ -21,15 +21,46 @@ function RecommendComicGenres(title,comic_data){
 	}
 }
 
-function spread(topics,r){
-	for (var i=0;i<topics.length; i++){
+function RelatedComics(topic,comic_data){
+	var related_comics = []
+	// var related_comics = []
+	var hoge = [];
+	var topic_contents_list = topic.text().split(',');
+	for(var i=0; i <comic_data.length; i++){
+		var related_comic = {};
+		var count = 0;
+		var common_words = []
+		for(j=0; j <topic_contents_list.length; j++){
+			if ($.inArray(topic_contents_list[j],comic_data[i].genres) !== -1){//topicの中身と対象データすべてとを見比べ
+				common_words.push(topic_contents_list[j])
+				if (count > 10){
+					related_comic["title"] = comic_data[i].title
+					related_comic["genres"] = comic_data[i].genres	
+				}else{
+					count = count + 1 ;
+				}
+			}
+		}
+	related_comics.push(related_comic)
+
+	}
+	// var related_comics  = $.unique(related_comics)
+	// console.log(topic.text())
+	console.log(related_comics)
+
+
+}
+
+
+function Spread(topics,r,comic_data){
+	for (var i = 0; i < topics.length; i++){
 	    var node = topics[i];
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
-
 	    var rad = 2*Math.PI * (i/topics.length);
 	    var x = r * Math.cos(rad) + centerX + 64/4;
 	    var y = r * Math.sin(rad) + centerY + 91/4;
+	    test = RelatedComics(topics[i],comic_data)
 	    topics[i].animate({
 	      left:x,
 	      top:y
@@ -46,8 +77,8 @@ $(function(){
 	  	var recommend_comic_gernes = RecommendComicGenres(recommend_comic[0],comic_data).genres;
 
 	  	recommend_like_topics = []//共起する語が含まれるtopic
-	  	for (var i =0 ; i< topic_data.length; i++){
-	  		for (var j = 0; j< recommend_comic_gernes.length; j++){
+	  	for (var i = 0 ; i < topic_data.length; i++){
+	  		for (var j = 0; j < recommend_comic_gernes.length; j++){
 	  			if ($.inArray(recommend_comic_gernes[j],topic_data[i].genre) !== -1){
 	  				recommend_like_topics.push(topic_data[i].genre)
 	  				break;
@@ -63,9 +94,8 @@ $(function(){
         var centerX = pos.left;//中央のコミックのX座標
         var centerY = pos.top;//中央のコミックのY座標
 
-	  	for (var i = 0; i< nodes_topics.length; i++){
+	  	for (var i = 0; i < nodes_topics.length; i++){
 	  		var $each_topics = nodes_topics[i];
-	  		console.log($each_topics)
 	  		$topics.append($each_topics);	
 	  		$each_topics.css({
 	  			left:centerX,
@@ -74,12 +104,9 @@ $(function(){
 		}
 
 	  	r = 100;
-	  	spread(nodes_topics,r)
+	  	Spread(nodes_topics,r,comic_data)
 	  	$("#like_comic_titles").remove();
 	});
 })
 
-$(document).on("mouseover",".topic",function(){
-	console.log($(this).text());
 
-})
