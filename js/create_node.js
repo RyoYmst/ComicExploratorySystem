@@ -22,6 +22,16 @@ function RecommendComicGenres(title,comic_data){
 }
 
 function CreateNodeComic(related_comic){
-	var $node = $("<div>").text(related_comic).addClass("related_comic");
+	var $node = $("<div>").text(related_comic.title).addClass("related_comic");
 	return $node
+}
+
+function DrawRelatedComics(related_comics){
+
+	var nodes = [];
+	for (i = 0; i<related_comics.length; i++){
+		var node = CreateNodeComic(related_comics[i])
+			nodes.push(node);
+	}
+	return nodes;
 }

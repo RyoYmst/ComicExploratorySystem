@@ -1,8 +1,8 @@
-// $(document).on("mouseover",".topic",function(){
-// 	$(this).showBalloon({
-// 		contents:"<div id = balloon>" + $(this).text() + "</div>"
-// 	});
-// })
+$(document).on("mouseover",".topic",function(){
+	$(this).showBalloon({
+		contents:"<div id = balloon>" + $(this).text() + "</div>"
+	});
+})
 
 $(document).on("mouseover",".related_comic",function(){
 	console.log("test")
@@ -18,9 +18,9 @@ $(document).on("mouseout",".related_comic",function(){
 	// });
 })
 
-// $(document).on("mouseover",".related_comic",function(){
-// 	$(this).showBalloon({
-// 		contents:"<div id = balloon>" + $(this).text() + "</div>"
-// 	});
-// })
+$(document).on("mouseover",".related_comic",function(){
+	$(this).showBalloon({
+		contents:"<div id = balloon>" + $(this).text() + "</div>"
+	});
+})
 
