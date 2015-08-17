@@ -21,6 +21,21 @@ function RecommendComicGenres(title,comic_data){
 	}
 }
 
+function CreateNodeComic(related_comic){
+	var $node = $("<div>").text(related_comic).addClass("related_comic");
+	return $node
+}
+
+function DrawRelatedComics(related_comics){
+	var nodes = [];
+	for (i = 0; i<related_comics.length; i++){
+		var node = CreateNodeComic(related_comics[i])
+			nodes.push(node);
+	}
+	return nodes;
+
+}
+
 function RelatedComics(topic,comic_data){
 
 	var related_comics = [];
@@ -42,32 +57,57 @@ function RelatedComics(topic,comic_data){
 			}
 		}
 
-		if (Object.keys(common_words).length > 1){
+		if (Object.keys(common_words).length > 2){
 			related_comic["common_words"] = common_words;
 		}
-		
 		if (Object.keys(related_comic).length !== 0){
 			related_comics.push(related_comic)
 		}
 	}
-	console.log(related_comics)
+	
+	draw_related_comics = DrawRelatedComics(related_comics)
+	return draw_related_comics
 }
 
 
-function Spread(topics,r,comic_data){
+function SpreadTopics(topics,r,comic_data){
+	var location = [];
+	var related_comcis_list = [];
 	for (var i = 0; i < topics.length; i++){
 	    var node = topics[i];
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
-	    var rad = 2*Math.PI * (i/topics.length);
+	    var rad = 2 * Math.PI * (i/topics.length);
 	    var x = r * Math.cos(rad) + centerX + 64/4;
 	    var y = r * Math.sin(rad) + centerY + 91/4;
-	    test = RelatedComics(topics[i],comic_data)
+	    location.push([x,y])
+	    related_comics = RelatedComics(topics[i],comic_data)
+		related_comcis_list.push(related_comics)
+
 	    topics[i].animate({
 	      left:x,
 	      top:y
 	    },"slow");
 	}
+	return [location,related_comcis_list]
+}
+
+function SpreadComics(location_list,related_comics){
+	var r = 200;
+	for (var i = 0; i< related_comics.length; i++){
+		for (var j = 0; j< location_list.length; j++){
+			if (i == j){
+				var centerX = location_list[j][0];
+				var centerY = location_list[j][1];
+				console.log([centerX,centerY])
+				var rad = 2 * Math.PI * (i/related_comics[i].length);
+				var x = r * Math.cos(rad) + centerX;
+			    var y = r * Math.sin(rad) + centerY;
+			}
+
+		}
+	}
+
 }
 
 $(function(){
@@ -106,9 +146,10 @@ $(function(){
 		}
 
 	  	r = 100;
-	  	// console.log(comic_data)
-	  	Spread(nodes_topics,r,comic_data)
+	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data)
 	  	$("#like_comic_titles").remove();
+
+	  	spread_comics = SpreadComics(spread_topics[0],spread_topics[1])
 	});
 })
 
