@@ -64,11 +64,26 @@ function RelatedComics(topic,comic_data){
 			related_comics.push(related_comic)
 		}
 	}
-	
 	draw_related_comics = DrawRelatedComics(related_comics)
 	return draw_related_comics
 }
 
+
+function DrawComics(related_comics,x,y){
+	var $comics = $("#related_comics");
+	var centerX = x;
+	var centerY = y;
+	// console.log(x,y)
+
+	for(var i =0;i<related_comics.length;i++){
+		var $each_comics = related_comics[i];
+		$comics.append($each_comics);
+		$each_comics.css({
+			left:x,
+			top:y,
+		})
+	}
+}
 
 function SpreadTopics(topics,r,comic_data){
 	var location = [];
@@ -77,13 +92,16 @@ function SpreadTopics(topics,r,comic_data){
 	    var node = topics[i];
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
+	    // console.log(centerX,centerY)
 	    var rad = 2 * Math.PI * (i/topics.length);
 	    var x = r * Math.cos(rad) + centerX + 64/4;
 	    var y = r * Math.sin(rad) + centerY + 91/4;
 	    location.push([x,y])
-	    related_comics = RelatedComics(topics[i],comic_data)
-		related_comcis_list.push(related_comics)
 
+	    related_comics = RelatedComics(topics[i],comic_data)
+	    DrawComics(related_comics,x,y)
+		related_comcis_list.push(related_comics)
+		// console.log(topics[i])
 	    topics[i].animate({
 	      left:x,
 	      top:y
@@ -99,16 +117,25 @@ function SpreadComics(location_list,related_comics){
 			if (i == j){
 				var centerX = location_list[j][0];
 				var centerY = location_list[j][1];
-				console.log([centerX,centerY])
 				var rad = 2 * Math.PI * (i/related_comics[i].length);
 				var x = r * Math.cos(rad) + centerX;
 			    var y = r * Math.sin(rad) + centerY;
+			    for (var t = 0; t< related_comics[i].length;t++){
+			    	related_comics[i][t].animate({
+			    		left:x,
+			    		top:y
+			    	},"slow");
+					// related_comics[i][t].css({
+					// 	left:x,
+					// 	top:y
+					// })
+			    	}
+			    }
 			}
 
 		}
 	}
 
-}
 
 $(function(){
  	topic_data = LoadTopicJson();
@@ -129,7 +156,9 @@ $(function(){
 	  	}
 
 		nodes_topics = NodesTopic(recommend_like_topics);//関連topicのdiv
+		console.log(nodes_topics)
 		
+
 	  	var $topics = $("#topics");
 	  	var $expect_like_comic = $(".center");//中央に提示されるコミック
         var pos = $expect_like_comic.position();
@@ -138,6 +167,7 @@ $(function(){
 
 	  	for (var i = 0; i < nodes_topics.length; i++){
 	  		var $each_topics = nodes_topics[i];
+	  		// console.log($each_topics)
 	  		$topics.append($each_topics);	
 	  		$each_topics.css({
 	  			left:centerX,
@@ -147,9 +177,10 @@ $(function(){
 
 	  	r = 100;
 	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data)
-	  	$("#like_comic_titles").remove();
+
 
 	  	spread_comics = SpreadComics(spread_topics[0],spread_topics[1])
+	  	$("#like_comic_titles").remove();
 	});
 })
 
