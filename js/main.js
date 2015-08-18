@@ -1,6 +1,45 @@
+function CreateNodeTopic(genre){
+	var $node = $("<div>").text(genre).addClass("topic");
+	return $node;
+}
+
+function NodesTopic(genres){
+	var nodes = [];
+	for (var i = 0 ; i< genres.length ; i++){
+		var node = CreateNodeTopic(genres[i]);
+		nodes.push(node);
+	}
+	return nodes;
+}
+
+function RecommendComicGenres(title,comic_data){
+	for (var i=0;i < comic_data.length;i++){
+		db_title = " " + comic_data[i].title + " "
+		if(db_title.indexOf(" " + title + " ") !== -1){
+			return comic_data[i]
+		}
+	}
+}
+
+function CreateNodeComic(related_comic){
+	var $node = $("<div>").text(related_comic.title).addClass("related_comic");
+	return $node
+}
+
+function DrawRelatedComics(related_comics){
+
+	var nodes = [];
+	for (i = 0; i<related_comics.length; i++){
+		var node = CreateNodeComic(related_comics[i])
+			nodes.push(node);
+	}
+	return nodes;
+}
+
 function RelatedComics(topic,comic_data){
 	var related_comics = [];
 	var topic_contents_list = topic.text().split(',');
+	console.log($(".center").text())
 	for(var i=0; i <comic_data.length; i++){
 		var related_comic = {};
 		var count = 0;
@@ -8,13 +47,22 @@ function RelatedComics(topic,comic_data){
 
 		for(j=0; j <topic_contents_list.length; j++){
 			if ($.inArray(topic_contents_list[j],comic_data[i].genres) !== -1){//topic内の各単語と対象作品の特徴語とを比較
-				if (count > 1){
-					related_comic["title"] = comic_data[i].title;
-					related_comic["genres"] = comic_data[i].genres;	
-				}else{
-					count = count + 1 ;
+
+			
+
+			//.centerのコミックとの重複は避ける
+
+
+
+				if (comic_data[i].title.indexOf($(".center").text()) == -1){
+					if (count > 1){
+						related_comic["title"] = comic_data[i].title;
+						related_comic["genres"] = comic_data[i].genres;	
+					}else{
+						count = count + 1 ;
+					}
+					common_words.push(topic_contents_list[j])
 				}
-				common_words.push(topic_contents_list[j])
 			}
 		}
 
@@ -48,7 +96,7 @@ function DrawComics(related_comics,x,y){
 	}
 }
 
-function SpreadTopics(topics,r,comic_data){
+function SpreadTopics(topics,r,comic_data){//トピックの位置情報、類似コミック、類似コミックの情報
 	var location = [];
 	var related_comcis_list = [];
 	for (var i = 0; i < topics.length; i++){
@@ -56,7 +104,7 @@ function SpreadTopics(topics,r,comic_data){
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
 	    var rad = 2 * Math.PI * (i/topics.length);//1~n番目
-	    var x = r * Math.cos(rad) + centerX + 64/4;
+	    var x = r * Math.cos(rad) + centerX + 64/3;
 	    var y = r * Math.sin(rad) + centerY + 91/4;
 	    location.push([x,y])
 
@@ -76,8 +124,6 @@ function SpreadComics(location_list,related_comics){
 	for (var i = 0; i< related_comics.length; i++){
 		for (var j = 0; j< location_list.length; j++){
 			if (i == j){//enumerate
-				// var centerX = location_list[j][0];
-				// var centerY = location_list[j][1];
 				var centerX = location_list[j][0] - 64/4;
 				var centerY = location_list[j][1] - 91/4;
 				for (var t = 0; t< related_comics[i].length;t++){
