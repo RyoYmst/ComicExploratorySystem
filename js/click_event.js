@@ -1,17 +1,3 @@
-function ClickCreateNodeTopic(genre){
-	var $node = $("<div>").text(genre).addClass("topic");
-	return $node;
-}
-
-function ClickNodesTopic(genres){
-	var nodes = [];
-	for (var i =0 ; i<genres.length;i++){
-		var node = ClickCreateNodeTopic(genres[i].genre)
-		nodes.push(node);
-	}
-	return nodes;
-}
-
 $(function(){
 	topic_data = LoadTopicJson();
  	comic_data = LoadComicJson();
@@ -35,10 +21,12 @@ $(function(){
 	         top:"+=" + distanceY 
 	     },"slow");
 
-		$(".center").removeClass(function(){
+		$(".center").removeClass(function(){//中央のコミックを削除
 			$(this).remove();
 		})
-		$(".topic").remove();
+		$(".topic").remove();//関連トピックを削除
+		$(".topic_area").remove();
+
 		$(this).addClass("center",3000);
 		$(this).removeClass("related_comic")
 		$(".related_comic").not(this).remove();
@@ -66,12 +54,16 @@ $(function(){
 				}
 			}
 		}
-		console.log(related_topics)
 		
+		nodes_topics = [];
+		nodes_topics_area = [];
+		for (var i =0; i<related_topics.length;i++){
+			nodes_topic = CreateNodeTopic(related_topics[i].genre)
+			nodes_topic_area = CreateTopicArea(related_topics[i].genre)
+			nodes_topics.push(nodes_topic)
+			nodes_topics_area.push(nodes_topic_area)
+		}
 
-
-		nodes_topics = ClickNodesTopic(related_topics);//関連topicのdiv
-		
 		var $topics = $("#topics");
 	  	for (var i = 0; i < nodes_topics.length; i++){
 	  		var $each_topics = nodes_topics[i];
@@ -81,8 +73,22 @@ $(function(){
 				top:center_posY,
 	  		})
 		}
+
+		var $topics_area = $("#topic_area");
+		for (var i = 0; i < nodes_topics_area.length; i++){
+	  		var $hoge = nodes_topics_area[i];
+	  		$topics_area.append($hoge);	
+	  		$hoge.css({
+	  			left:center_posX-100,
+    			top:center_posY-100,
+    			zIndex:"-1",
+	  		})
+		}
+
+
 		r = 256;
 	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data);
+	  	spread_topics_area = SpreadTopicsArea(nodes_topics_area,r);
 	  	spread_comics = SpreadComics(spread_topics[0],spread_topics[1]);
 	})
 })
