@@ -39,21 +39,13 @@ function DrawRelatedComics(related_comics){
 function RelatedComics(topic,comic_data){
 	var related_comics = [];
 	var topic_contents_list = topic.text().split(',');
-	console.log($(".center").text())
 	for(var i=0; i <comic_data.length; i++){
 		var related_comic = {};
 		var count = 0;
 		var common_words = [];//各作品の特徴とトピックの語との共起語のlist
 
 		for(j=0; j <topic_contents_list.length; j++){
-			if ($.inArray(topic_contents_list[j],comic_data[i].genres) !== -1){//topic内の各単語と対象作品の特徴語とを比較
-
-			
-
-			//.centerのコミックとの重複は避ける
-
-
-
+			if ($.inArray(topic_contents_list[j],comic_data[i].genres) !== -1){//topic内の各単語と対象作品の特徴語とを比較(str,list)
 				if (comic_data[i].title.indexOf($(".center").text()) == -1){
 					if (count > 1){
 						related_comic["title"] = comic_data[i].title;
@@ -79,7 +71,9 @@ function RelatedComics(topic,comic_data){
 	return [draw_related_comics,related_comics]
 }
 
-
+////////////////////////////////////////////
+//類似コミックの描画
+////////////////////////////////////////////
 function DrawComics(related_comics,x,y){
 	var $comics = $("#related_comics");
 	var centerX = x;
