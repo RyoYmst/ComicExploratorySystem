@@ -149,7 +149,7 @@ function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミ
 
 	    // DrawComics(related_comics[0],x,y)
 		// related_comcis_list.push(related_comics[0])
-	    topics[i].animate({
+	    topics[i].css({
 	      left:x,
 	      top:y
 	    },"slow");
@@ -234,5 +234,3 @@ $(function(){
 	  	$("#like_comic_titles").remove();
 	});
 })
-
-
