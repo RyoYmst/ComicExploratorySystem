@@ -2,23 +2,41 @@
 	font-size:0px;
 	position:absolute;
 	font-weight: 900;
-	top:40%;
+	top:50%;
 	left:50%;
     -moz-background-size:cover;
 	background-size:cover;
 	width:64px;
 	height:91px;
-	/*width:96px;
-	height:136.5px;*/
 }
 
-#topics{
-	border-radius: 10px;
-	height: 20px;
-	width: 20px;
+.topic{
+	border-radius: 30px;
+	height: 30px;
+	width: 30px;
 	background-color:red;
+	position:absolute;
+	font-size:0;		
 }
 
+.topic_area{
+	border-radius: 200px;
+	height: 200px;
+	width: 200px;
+	background-color:yellow;
+	position:absolute;
+	font-size:0;
+}
+
+.related_comic{
+	width:38.4px;
+	height:54.6px;
+	-moz-background-size:cover;
+	background-size:cover;
+	background-color:blue;
+	position:absolute;
+	font-size:0;
+}
 
 .title{
 	font-size:0px;
@@ -42,9 +60,9 @@
 
 
 
-#history{
+/*#history{
 	position:absolute;
-	/*background-color:#ff0000;*/
+	background-color:#ff0000;
 	top:85%;
 	font-size:24px;
-}
+}*/
