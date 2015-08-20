@@ -85,11 +85,70 @@ $(function(){
 	  		})
 		}
 
-
 		r = 256;
 	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data);
 	  	spread_topics_area = SpreadTopicsArea(nodes_topics_area,r);
 	  	spread_comics = SpreadComics(spread_topics[0],spread_topics[1]);
 	})
 })
+
+
+function HistoryNode(title){
+	var node = $("<div>").text(title).addClass("histories");
+	return node;
+}
+
+function HistoryNodes(titles){
+	var nodes = [];
+	for (var i = 0; i< titles.length; i++){
+		var node = HistoryNode(titles[i]);
+		nodes.push(node)
+	}
+	return nodes;
+}
+
+$(function(){
+	comic_data = LoadComicJson();
+	clicked_comic_titles = [];
+	clicked_comic_data = [];
+	$(document).on("click",".center",function(){		
+		for(var i =0; i< comic_data.length; i++){
+			if (comic_data[i].title.indexOf($(this).text()) !== -1){
+				clicked_comic_titles.push(comic_data[i].title);
+				clicked_comic_data.push(comic_data[i]);
+				break
+			}
+		}
+
+	var history_nodes = HistoryNodes(clicked_comic_titles)
+	var history = $("#history");
+	for (var i =0 ; i< history_nodes.length; i++){
+		var left = i * 80;
+		var history_node = history_nodes[i];
+		history.append(history_node);
+		history_node.css({
+			left:left+"px",
+			top:"90%",
+			width:"51.2px",
+            height:"76.8px",
+            position:"absolute",
+            top:"85%",
+            "background-image":"url(../~artuhr0912/img/"+ history_node.text() +".jpg)"
+		})
+	}
+	})
+
+	$(document).on("mouseover",".histories",function(){
+		console.log($(this).text())
+	})
+
+
+
+
+
+
+})
+
+
+
 
