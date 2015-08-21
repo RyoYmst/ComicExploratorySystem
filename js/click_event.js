@@ -133,18 +133,13 @@ $(function(){
 			}
 		}
 
-<<<<<<< HEAD
 		var history_nodes = HistoryNodes(clicked_comic_titles);
 		store_history_nodes.push(history_nodes)
 		var history = $("#history");
 		for (var i =0 ; i< history_nodes.length; i++){
 			var left = i * 80 + 50;
-=======
 		var history_nodes = HistoryNodes(clicked_comic_titles)
-		var history = $("#history");
-		for (var i =0 ; i< history_nodes.length; i++){
-			var left = i * 80;
->>>>>>> incomplete
+		
 			var history_node = history_nodes[i];
 			history.append(history_node);
 			history_node.css({
@@ -157,7 +152,6 @@ $(function(){
 	            "background-image":"url(../~artuhr0912/img/"+ history_node.text() +".jpg)"
 			})
 		}
-<<<<<<< HEAD
 	})
 
 	$(document).on("mouseover",".histories",function(){
@@ -174,29 +168,24 @@ $(function(){
 	$(document).on("mouseout",".histories",function(){
 		$(this).hideBalloon()
 	})
-=======
 	})
 
 	$(document).on("click",".histories",function(){
 		var center_position = $(".center")
 		var centerX = center_position.position().left;
 		var centerY = center_position.position().top;
->>>>>>> incomplete
 
 	//////////////////////////////////////////////////////////////////////
 	//historyに格納されたコミックを選択するとそのコミックを中心とした探索を再開できる
 	//////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
+
 	$(document).on("click",".histories",function(){
-=======
->>>>>>> incomplete
 		$(".center").removeClass(function(){//中央のコミックを削除
 			$(this).remove();
 		})
 		$(".topic").remove();//関連トピックを削除
 		$(".topic_area").remove();
-<<<<<<< HEAD
 
 		$(this).addClass("center",3000);
 		$(this).removeClass("related_comic")
@@ -217,7 +206,7 @@ $(function(){
 	  	nodes_topics = NodesTopic(related_topics);//関連topicのdiv
 		nodes_topics_area = TopicArea(related_topics);
 
-=======
+
 		$(this).addClass("center",3000);
 		$(this).removeClass("related_comic")
 		$(".related_comic").not(this).remove();
@@ -237,12 +226,12 @@ $(function(){
 
 		nodes_topics = NodesTopic(related_topics);//関連topicのdiv
 		nodes_topics_area = TopicArea(related_topics);
->>>>>>> incomplete
+
 		var selected = $("#recommend");
 		var $node = $("<div>").text(selected_comic).attr("class","center");
 		selected.append($node);
 		$(".center").css({
-<<<<<<< HEAD
+
            "background-image":"url(../~artuhr0912/img/"+ selected_comic +".jpg)"
         })
 		DrawFunction(nodes_topics)
@@ -251,15 +240,8 @@ $(function(){
 	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data);
 	  	spread_topics_area = SpreadTopicsArea(nodes_topics_area,r)
 	  	spread_comics = SpreadComics(spread_topics[0],spread_topics[1]);
-=======
-			"background-image":"url(../~artuhr0912/img/"+ selected_comic +".jpg)"
-		})
-		DrawFunction(nodes_topics)
-		r = 256;
-		spread_topics = SpreadTopics(nodes_topics,r,comic_data);
-		spread_topics_area = SpreadTopicsArea(nodes_topics_area,r);
-		spread_comics = SpreadComics(spread_topics[0],spread_topics[1]);
->>>>>>> incomplete
+
+		
 	})
 })
 

@@ -44,12 +44,8 @@ $(document).on("mouseover",".related_comic",function(){
 		contents:"<div id = balloon_related><div id = balloon_title>" + match_data[0].title + "</div><br>" + split_topic_word + "</div>",
 		css:{
 			width:"500px",
-<<<<<<< HEAD
-			backgroundColor:"#FFCCFF"
-=======
 			backgroundColor:"#FFCCFF",
 
->>>>>>> incomplete
 		}
 	});
 	$(this).animate({
@@ -57,13 +53,7 @@ $(document).on("mouseover",".related_comic",function(){
 		height:"218.4px"
 	},"500");
 
-<<<<<<< HEAD
 
-
-
-
-=======
->>>>>>> incomplete
 })
 
 $(document).on("mouseout",".related_comic",function(){
@@ -101,11 +91,7 @@ $(document).on("mouseout",".center",function(){
 	$(this).hideBalloon();
 })
 
-<<<<<<< HEAD
 
-
-
-=======
 ////////////////////////////////////////////
 //選択履歴部分のイベント処理(バルーン)
 ////////////////////////////////////////////
@@ -133,9 +119,6 @@ $(document).on("mouseover",".histories",function(){
 $(document).on("mouseout",".histories",function(){
 	$(this).hideBalloon();
 })
-
->>>>>>> incomplete
-
 
 
 
