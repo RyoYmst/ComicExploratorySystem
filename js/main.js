@@ -1,3 +1,7 @@
+// topic_data = LoadTopicJson();
+// comic_data = LoadComicJson();
+
+
 function CreateNodeTopic(genre){
 	var $node = $("<div>").text(genre).addClass("topic");
 	return $node;
@@ -27,21 +31,15 @@ function TopicArea(genres){
 }
 
 
-function RecommendComicGenres(title,comic_data){
+function SelectedComicGenres(title,comic_data){
 	for (var i=0;i < comic_data.length;i++){
-		db_title = " " + comic_data[i].title + " "
-		if(db_title.indexOf(" " + title + " ") !== -1){
+		db_title =comic_data[i].title
+		if(db_title.indexOf(title) !== -1){
 			return comic_data[i]
 		}
 	}
 }
 
-<<<<<<< HEAD
-function RelatedComics(topic,comic_data){
-	var related_comics = []
-	// var related_comics = []
-	var hoge = [];
-=======
 function CreateNodeComic(related_comic){
 	var $node = $("<div>").text(related_comic.title).addClass("related_comic");
 	return $node
@@ -60,45 +58,10 @@ function DrawRelatedComics(related_comics){
 function RelatedComics(topic,comic_data){
 	var related_comics = [];
 	var non_related_comic_topic = [];
->>>>>>> incomplete
 	var topic_contents_list = topic.text().split(',');
 	for(var i=0; i <comic_data.length; i++){
 		var related_comic = {};
 		var count = 0;
-<<<<<<< HEAD
-		var common_words = []
-		for(j=0; j <topic_contents_list.length; j++){
-			if ($.inArray(topic_contents_list[j],comic_data[i].genres) !== -1){//topicの中身と対象データすべてとを見比べ
-				common_words.push(topic_contents_list[j])
-				if (count > 10){
-					related_comic["title"] = comic_data[i].title
-					related_comic["genres"] = comic_data[i].genres	
-				}else{
-					count = count + 1 ;
-				}
-			}
-		}
-	related_comics.push(related_comic)
-
-	}
-	// var related_comics  = $.unique(related_comics)
-	// console.log(topic.text())
-	console.log(related_comics)
-
-
-}
-
-
-function Spread(topics,r,comic_data){
-	for (var i = 0; i < topics.length; i++){
-	    var node = topics[i];
-	    var centerX = node.offset().left;
-	    var centerY = node.offset().top;
-	    var rad = 2*Math.PI * (i/topics.length);
-	    var x = r * Math.cos(rad) + centerX + 64/4;
-	    var y = r * Math.sin(rad) + centerY + 91/4;
-	    test = RelatedComics(topics[i],comic_data)
-=======
 		var common_words = [];//各作品の特徴とトピックの語との共起語のlist
 
 		for(j=0; j <topic_contents_list.length; j++){
@@ -167,21 +130,16 @@ function SpreadTopics(topics,r,comic_data){//トピックの位置情報、類�
 
 	    DrawComics(related_comics[0],x,y)
 		related_comcis_list.push(related_comics[0])
->>>>>>> incomplete
 	    topics[i].animate({
 	      left:x,
 	      top:y
 	    },"slow");
-<<<<<<< HEAD
-=======
 
 	}
 	return [location,related_comcis_list,related_comics[1]]
 }
 
 function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミック、類似コミックの情報
-	// var location = [];
-	// var related_comcis_list = [];
 	for (var i = 0; i < topics.length; i++){
 		var node = topics[i]
 	    var centerX = node.offset().left;
@@ -189,10 +147,6 @@ function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミ
 	    var rad = 2 * Math.PI * (i/topics.length);//1~n番目
 	    var x = r * Math.cos(rad) + centerX + 64/3;
 	    var y = r * Math.sin(rad) + centerY + 91/4;
-	    // location.push([x,y])
-
-	    // DrawComics(related_comics[0],x,y)
-		// related_comcis_list.push(related_comics[0])
 	    topics[i].css({
 	      left:x,
 	      top:y
@@ -220,7 +174,35 @@ function SpreadComics(location_list,related_comics){
 				}
 			}
 		}
->>>>>>> incomplete
+	}
+}
+
+function DrawFunction(nodes_topics){
+	var $topics = $("#topics");
+  	var $expect_like_comic = $(".center");//中央に提示されるコミック
+    var pos = $expect_like_comic.position();
+    var centerX = pos.left;//中央のコミックのX座標
+    var centerY = pos.top;//中央のコミックのY座標
+
+  	for (var i = 0; i < nodes_topics.length; i++){
+  		var $each_topics = nodes_topics[i];
+  		$topics.append($each_topics);	
+  		$each_topics.css({
+  			left:centerX,
+			top:centerY,
+			zIndex:"1",
+  		})
+	}
+
+	var $topics_area = $("#topic_area");
+	for (var i = 0; i < nodes_topics_area.length; i++){
+  		var $hoge = nodes_topics_area[i];
+  		$topics_area.append($hoge);	
+  		$hoge.css({
+  			left:centerX-100,
+			top:centerY-100,
+			zIndex:"-1",
+  		})
 	}
 }
 
@@ -229,73 +211,23 @@ $(function(){
  	comic_data = LoadComicJson();
 
 	$(document).on("click","#input_button",function(){
-	  	var recommend_comic = ExpectLikeComic();
-	  	var recommend_comic_gernes = RecommendComicGenres(recommend_comic[0],comic_data).genres;
+	  	var selected_comic = ExpectLikeComic();
+	  	var selected_comic_gernes = SelectedComicGenres(selected_comic[0],comic_data).genres;
 
-	  	recommend_like_topics = []//共起する語が含まれるtopic
+	  	related_topics = []//共起する語が含まれるtopic
 	  	for (var i = 0 ; i < topic_data.length; i++){
-	  		for (var j = 0; j < recommend_comic_gernes.length; j++){
-	  			if ($.inArray(recommend_comic_gernes[j],topic_data[i].genre) !== -1){
-	  				recommend_like_topics.push(topic_data[i].genre)
+	  		for (var j = 0; j < selected_comic_gernes.length; j++){
+	  			if ($.inArray(selected_comic_gernes[j],topic_data[i].genre) !== -1){
+	  				related_topics.push(topic_data[i].genre)
 	  				break;
 	  			}
 	  		}
 	  	}
 
-		nodes_topics = NodesTopic(recommend_like_topics);//関連topicのdiv
-<<<<<<< HEAD
-		
-=======
-		nodes_topics_area = TopicArea(recommend_like_topics);
+		nodes_topics = NodesTopic(related_topics);//関連topicのdiv
+		nodes_topics_area = TopicArea(related_topics);//関連トピックの背景のdiv
+		DrawFunction(nodes_topics)
 
->>>>>>> incomplete
-	  	var $topics = $("#topics");
-	  	var $expect_like_comic = $(".center");//中央に提示されるコミック
-        var pos = $expect_like_comic.position();
-        var centerX = pos.left;//中央のコミックのX座標
-        var centerY = pos.top;//中央のコミックのY座標
-<<<<<<< HEAD
-
-	  	for (var i = 0; i < nodes_topics.length; i++){
-	  		var $each_topics = nodes_topics[i];
-	  		$topics.append($each_topics);	
-	  		$each_topics.css({
-	  			left:centerX,
-    			top:centerY,
-	  		})
-		}
-
-	  	r = 100;
-	  	Spread(nodes_topics,r,comic_data)
-	  	$("#like_comic_titles").remove();
-	});
-})
-=======
-
-	  	for (var i = 0; i < nodes_topics.length; i++){
-	  		var $each_topics = nodes_topics[i];
-	  		$topics.append($each_topics);	
-	  		$each_topics.css({
-	  			left:centerX,
-    			top:centerY,
-    			zIndex:"1",
-	  		})
-		}
->>>>>>> incomplete
-
-		var $topics_area = $("#topic_area");
-		for (var i = 0; i < nodes_topics_area.length; i++){
-	  		var $hoge = nodes_topics_area[i];
-	  		$topics_area.append($hoge);	
-	  		$hoge.css({
-	  			left:centerX-100,
-    			top:centerY-100,
-    			zIndex:"-1",
-	  		})
-		}
-
-<<<<<<< HEAD
-=======
 	  	r = 256;
 	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data);
 	  	spread_topics_area = SpreadTopicsArea(nodes_topics_area,r)
@@ -303,4 +235,3 @@ $(function(){
 	  	$("#like_comic_titles").remove();
 	});
 })
->>>>>>> incomplete
