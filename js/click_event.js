@@ -189,16 +189,5 @@ $(function(){
 })
 
 
-function SelectedComicGenres(clicked_comic_title,comic_data){
-	var clicked_comic_data = [];
-	for(var i = 0; i< comic_data.length; i++){
-		if (clicked_comic_title.indexOf(comic_data[i].title) !== -1){
-			clicked_comic_data.push(comic_data[i])
-		}
-	}
-	return clicked_comic_data[0]
-}
-
-
 
 
