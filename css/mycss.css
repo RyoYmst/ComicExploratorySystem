@@ -58,6 +58,7 @@
 	height:91px;
 }
 
+<<<<<<< HEAD
 #balloon_center{
 	border: 5px solid #FF657A;
 }
@@ -67,3 +68,10 @@
 	font-size:24px;
 	text-align:center;
 }
+=======
+#balloon_title{
+	font-size:24px;
+	text-align:center;
+}
+
+>>>>>>> incomplete
