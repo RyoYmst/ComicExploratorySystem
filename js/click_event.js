@@ -3,6 +3,7 @@ $(function(){
  	comic_data = LoadComicJson();
 	$(document).on("click",".related_comic",function(){
 		
+
 		////////////////////////////////////////////
 		//クリックしたコミックの中央への遷移、属性の変換
 		////////////////////////////////////////////
@@ -24,6 +25,10 @@ $(function(){
 		$(".center").removeClass(function(){//中央のコミックを削除
 			$(this).remove();
 		})
+		$(this).animate({
+			width:"64px",
+			height:"91px"
+		},"500");
 		$(".topic").remove();//関連トピックを削除
 		$(".topic_area").remove();
 
@@ -108,9 +113,10 @@ function HistoryNodes(titles){
 }
 
 $(function(){
-	comic_data = LoadComicJson();
 	clicked_comic_titles = [];
 	clicked_comic_data = [];
+	store_history_nodes = [];
+
 	$(document).on("click",".center",function(){		
 		for(var i =0; i< comic_data.length; i++){
 			if (comic_data[i].title.indexOf($(this).text()) !== -1){
@@ -120,34 +126,78 @@ $(function(){
 			}
 		}
 
-	var history_nodes = HistoryNodes(clicked_comic_titles)
-	var history = $("#history");
-	for (var i =0 ; i< history_nodes.length; i++){
-		var left = i * 80;
-		var history_node = history_nodes[i];
-		history.append(history_node);
-		history_node.css({
-			left:left+"px",
-			top:"90%",
-			width:"51.2px",
-            height:"76.8px",
-            position:"absolute",
-            top:"85%",
-            "background-image":"url(../~artuhr0912/img/"+ history_node.text() +".jpg)"
+		var history_nodes = HistoryNodes(clicked_comic_titles)
+		var history = $("#history");
+		for (var i =0 ; i< history_nodes.length; i++){
+			var left = i * 80;
+			var history_node = history_nodes[i];
+			history.append(history_node);
+			history_node.css({
+				left:left+"px",
+				top:"90%",
+				width:"51.2px",
+	            height:"76.8px",
+	            position:"absolute",
+	            top:"85%",
+	            "background-image":"url(../~artuhr0912/img/"+ history_node.text() +".jpg)"
+			})
+		}
+	})
+
+	$(document).on("click",".histories",function(){
+		var center_position = $(".center")
+		var centerX = center_position.position().left;
+		var centerY = center_position.position().top;
+
+
+		$(".center").removeClass(function(){//中央のコミックを削除
+			$(this).remove();
 		})
-	}
+		$(".topic").remove();//関連トピックを削除
+		$(".topic_area").remove();
+		$(this).addClass("center",3000);
+		$(this).removeClass("related_comic")
+		$(".related_comic").not(this).remove();
+		var selected_comic = $(this).text()
+		
+		var selected_comic_genres = SelectedComicGenres(selected_comic,comic_data).genres
+
+		related_topics = []//共起する語が含まれるtopic
+		for (var i = 0 ; i < topic_data.length; i++){
+			for (var j = 0; j < selected_comic_genres.length; j++){
+				if ($.inArray(selected_comic_genres[j],topic_data[i].genre) !== -1){
+					related_topics.push(topic_data[i].genre)
+					break;
+				}
+			}
+		}
+
+		nodes_topics = NodesTopic(related_topics);//関連topicのdiv
+		nodes_topics_area = TopicArea(related_topics);
+		var selected = $("#recommend");
+		var $node = $("<div>").text(selected_comic).attr("class","center");
+		selected.append($node);
+		$(".center").css({
+			"background-image":"url(../~artuhr0912/img/"+ selected_comic +".jpg)"
+		})
+		DrawFunction(nodes_topics)
+		r = 256;
+		spread_topics = SpreadTopics(nodes_topics,r,comic_data);
+		spread_topics_area = SpreadTopicsArea(nodes_topics_area,r);
+		spread_comics = SpreadComics(spread_topics[0],spread_topics[1]);
 	})
-
-	$(document).on("mouseover",".histories",function(){
-		console.log($(this).text())
-	})
-
-
-
-
-
-
 })
+
+
+function SelectedComicGenres(clicked_comic_title,comic_data){
+	var clicked_comic_data = [];
+	for(var i = 0; i< comic_data.length; i++){
+		if (clicked_comic_title.indexOf(comic_data[i].title) !== -1){
+			clicked_comic_data.push(comic_data[i])
+		}
+	}
+	return clicked_comic_data[0]
+}
 
 
 

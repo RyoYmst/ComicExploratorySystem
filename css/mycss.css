@@ -58,11 +58,8 @@
 	height:91px;
 }
 
-
-
-/*#history{
-	position:absolute;
-	background-color:#ff0000;
-	top:85%;
+#balloon_title{
 	font-size:24px;
-}*/
+	text-align:center;
+}
+
