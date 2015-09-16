@@ -1,4 +1,8 @@
 $(function(){
+	$(document).on("mouseover",".related_comic",function(){
+		console.log($(this).text)
+	})
+
 	$(document).on("click",".related_comic",function(){
 		
 
@@ -48,6 +52,7 @@ $(function(){
 				clicked_comic_data.push(comic_data[i])
 			}
 		}
+		
 		related_topics = []
 		for (var i = 0; i < topic_data.length; i++){
 			var count = 0;
@@ -58,12 +63,26 @@ $(function(){
 				}
 			}
 		}
+
+		//提示されるトピックの数が多すぎる可能性があるので最大数を6に設定
+	  	selected_topics = []
+	  	selected_topic_num = Selected(related_topics.length,6)
+	  	for (var i = 0;i< selected_topic_num.length; i++){
+	  		selected_topics.push(related_topics[i])
+	  	}
+
+	  	////////////////////////////////////////////
+		//related_topics 全トピック
+		//selected_topics ランダムに選定したトピック
+		////////////////////////////////////////////
+		console.log(selected_topics)
+
 		
 		nodes_topics = [];
 		nodes_topics_area = [];
-		for (var i =0; i<related_topics.length;i++){
-			nodes_topic = CreateNodeTopic(related_topics[i].genre)
-			nodes_topic_area = CreateTopicArea(related_topics[i].genre)
+		for (var i =0; i<selected_topics.length;i++){
+			nodes_topic = CreateNodeTopic(selected_topics[i].genre)
+			nodes_topic_area = CreateTopicArea(selected_topics[i].genre)
 			nodes_topics.push(nodes_topic)
 			nodes_topics_area.push(nodes_topic_area)
 		}
@@ -181,9 +200,11 @@ $(function(){
 
 
 	$(document).on("click",".histories",function(){
+		$(this).data("balloon").remove();//選択時に展開しているballoonを削除
 		$(".center").removeClass(function(){//中央のコミックを削除
 			$(this).remove();
 		})
+		// $(".center").remove();
 		$(".topic").remove();//関連トピックを削除
 		$(".topic_area").remove();
 
@@ -224,8 +245,20 @@ $(function(){
 			}
 		}
 
-		nodes_topics = NodesTopic(related_topics);//関連topicのdiv
-		nodes_topics_area = TopicArea(related_topics);
+			//提示されるトピックの数が多すぎる可能性があるので最大数を6に設定
+	  	selected_topics = []
+	  	selected_topic_num = Selected(related_topics.length,6)
+	  	for (var i = 0;i< selected_topic_num.length; i++){
+	  		selected_topics.push(related_topics[i])
+	  	}
+
+	  	////////////////////////////////////////////
+		//related_topics 全トピック
+		//selected_topics ランダムに選定したトピック
+		////////////////////////////////////////////
+
+		nodes_topics = NodesTopic(selected_topics);//関連topicのdiv
+		nodes_topics_area = TopicArea(selected_topics);
 
 		var selected = $("#recommend");
 		var $node = $("<div>").text(selected_comic).attr("class","center");

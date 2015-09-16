@@ -1,1 +1,3 @@
 ComicExploratorySystem
+
+imgフォルダを作成し、各作品タイトルと同じ画像データを保存すると動きます
