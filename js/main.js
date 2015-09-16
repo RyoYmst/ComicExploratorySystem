@@ -1,7 +1,3 @@
-// topic_data = LoadTopicJson();
-// comic_data = LoadComicJson();
-
-
 function CreateNodeTopic(genre){
 	var $node = $("<div>").text(genre).addClass("topic");
 	return $node;
@@ -30,7 +26,6 @@ function TopicArea(genres){
 	return nodes;
 }
 
-
 function SelectedComicGenres(title,comic_data){
 	for (var i=0;i < comic_data.length;i++){
 		db_title =comic_data[i].title
@@ -46,9 +41,10 @@ function CreateNodeComic(related_comic){
 }
 
 function DrawRelatedComics(related_comics){
-
+ 	selected_comics = Selected(related_comics.length,9)
 	var nodes = [];
-	for (i = 0; i<related_comics.length; i++){
+	for (i = 0; i< selected_comics.length; i++){
+		console.log(related_comics[i])
 		var node = CreateNodeComic(related_comics[i])
 			nodes.push(node);
 	}
@@ -78,9 +74,9 @@ function RelatedComics(topic,comic_data){
 			}
 		}
 
-		if (Object.keys(common_words).length > 2){
-			related_comic["common_words"] = common_words;
-		}
+		// if (Object.keys(common_words).length > 2){
+		// 	related_comic["common_words"] = common_words;
+		// }
 		if (Object.keys(related_comic).length !== 0){
 			related_comics.push(related_comic)
 		}
@@ -100,6 +96,7 @@ function RelatedComics(topic,comic_data){
 ////////////////////////////////////////////
 //類似コミックの描画
 ////////////////////////////////////////////
+
 function DrawComics(related_comics,x,y){
 	var $comics = $("#related_comics");
 	var centerX = x;
@@ -124,7 +121,7 @@ function SpreadTopics(topics,r,comic_data){//トピックの位置情報、類�
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
 	    var rad = 2 * Math.PI * (i/topics.length);//1~n番目
-	    var x = r * Math.cos(rad) + centerX + 64/3;
+	    var x = r * Math.cos(rad) + centerX + 64/4;
 	    var y = r * Math.sin(rad) + centerY + 91/4;
 	    location.push([x,y])
 
@@ -145,8 +142,8 @@ function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミ
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
 	    var rad = 2 * Math.PI * (i/topics.length);//1~n番目
-	    var x = r * Math.cos(rad) + centerX + 64/3;
-	    var y = r * Math.sin(rad) + centerY + 91/4;
+	    var x = r * Math.cos(rad) + centerX + 20;
+	    var y = r * Math.sin(rad) + centerY + 25;
 	    topics[i].css({
 	      left:x,
 	      top:y
@@ -156,7 +153,7 @@ function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミ
 }
 
 function SpreadComics(location_list,related_comics){
-	var r = 72;
+	var r = 85;
 	for (var i = 0; i< related_comics.length; i++){
 		for (var j = 0; j< location_list.length; j++){
 			if (i == j){//enumerate
@@ -206,6 +203,27 @@ function DrawFunction(nodes_topics){
 	}
 }
 
+
+////////////////////////////////////////////
+//topicのデータと作品のデータ読み込み
+////////////////////////////////////////////
+
+function Selected(num,max){
+	selected_num = [];
+	for (var i = 0; i< num; i++){
+    	var candidate = Math.floor(Math.random()*num);
+    	if ($.inArray(candidate,selected_num) == -1){
+      		selected_num.push(candidate);  
+    	}else{
+    	  	continue
+    	}
+    	if (selected_num.length > max){
+      		break
+    	}
+	}
+	return selected_num
+}
+
 $(function(){
  	topic_data = LoadTopicJson();
  	comic_data = LoadComicJson();
@@ -213,7 +231,7 @@ $(function(){
 	$(document).on("click","#input_button",function(){
 	  	var selected_comic = ExpectLikeComic();
 	  	var selected_comic_gernes = SelectedComicGenres(selected_comic[0],comic_data).genres;
-
+	  	// console.log(selected_comic_gernes)
 	  	related_topics = []//共起する語が含まれるtopic
 	  	for (var i = 0 ; i < topic_data.length; i++){
 	  		for (var j = 0; j < selected_comic_gernes.length; j++){
@@ -223,14 +241,27 @@ $(function(){
 	  			}
 	  		}
 	  	}
+	  	//提示されるトピックの数が多すぎる可能性があるので最大数を6に設定
+	  	selected_topics = []
+	  	selected_topic_num = Selected(related_topics.length,6)
+	  	for (var i = 0;i< selected_topic_num.length; i++){
+	  		selected_topics.push(related_topics[i])
+	  	}
 
-		nodes_topics = NodesTopic(related_topics);//関連topicのdiv
-		nodes_topics_area = TopicArea(related_topics);//関連トピックの背景のdiv
+	  	////////////////////////////////////////////
+		//related_topics 全トピック
+		//selected_topics ランダムに選定したトピック
+		////////////////////////////////////////////
+
+
+		nodes_topics = NodesTopic(selected_topics);//関連topicのdiv　
+		nodes_topics_area = TopicArea(selected_topics);//関連トピックの背景のdiv
 		DrawFunction(nodes_topics)
 
-	  	r = 256;
+	  	r = 300;
 	  	spread_topics = SpreadTopics(nodes_topics,r,comic_data);
 	  	spread_topics_area = SpreadTopicsArea(nodes_topics_area,r)
+
 	  	spread_comics = SpreadComics(spread_topics[0],spread_topics[1]);
 	  	$("#like_comic_titles").remove();
 	});
