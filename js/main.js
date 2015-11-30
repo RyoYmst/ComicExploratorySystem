@@ -26,15 +26,6 @@ function TopicArea(genres){
 	return nodes;
 }
 
-function SelectedComicGenres(title,comic_data){
-	for (var i=0;i < comic_data.length;i++){
-		db_title =comic_data[i].title
-		if(db_title.indexOf(title) !== -1){
-			return comic_data[i]
-		}
-	}
-}
-
 function CreateNodeComic(related_comic){
 	var $node = $("<div>").text(related_comic.title).addClass("related_comic");
 	return $node
@@ -63,7 +54,7 @@ function RelatedComics(topic,comic_data){
 		for(j=0; j <topic_contents_list.length; j++){
 			if ($.inArray(topic_contents_list[j],comic_data[i].genres) !== -1){//topic内の各単語と対象作品の特徴語とを比較(str,list)
 				if (comic_data[i].title.indexOf($(".center").text()) == -1){
-					if (count > 1){
+					if (count > 2){                                                                               //共起数判定
 						related_comic["title"] = comic_data[i].title;
 						related_comic["genres"] = comic_data[i].genres;	
 					}else{
@@ -107,7 +98,8 @@ function DrawComics(related_comics,x,y){
 		$each_comics.css({
 			left:x,
 			top:y,
-			"background-image":"url(../~artuhr0912/img/" + related_comics[i].text() + ".jpg)"
+			//"background-color":"blue"
+			"background-image":"url(../~artuhr0912/image/" + related_comics[i].text() + ".jpg)"
 		})
 	}
 }
@@ -128,8 +120,8 @@ function SpreadTopics(topics,r,comic_data){//トピックの位置情報、類�
 	    DrawComics(related_comics[0],x,y)
 		related_comcis_list.push(related_comics[0])
 	    topics[i].animate({
-	      left:x,
-	      top:y
+	      left:x-5,//各トピックのx座標
+	      top:y-5//各トピックのy座標
 	    },"slow");
 
 	}
@@ -142,8 +134,8 @@ function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミ
 	    var centerX = node.offset().left;
 	    var centerY = node.offset().top;
 	    var rad = 2 * Math.PI * (i/topics.length);//1~n番目
-	    var x = r * Math.cos(rad) + centerX + 20;
-	    var y = r * Math.sin(rad) + centerY + 25;
+	    var x = r * Math.cos(rad) + centerX + 20;//違う
+	    var y = r * Math.sin(rad) + centerY + 25;//違う
 	    topics[i].css({
 	      left:x,
 	      top:y
@@ -153,7 +145,7 @@ function SpreadTopicsArea(topics,r){//トピックの位置情報、類似コミ
 }
 
 function SpreadComics(location_list,related_comics){
-	var r = 85;
+	var r = 100;
 	for (var i = 0; i< related_comics.length; i++){
 		for (var j = 0; j< location_list.length; j++){
 			if (i == j){//enumerate
@@ -176,17 +168,12 @@ function SpreadComics(location_list,related_comics){
 
 function DrawFunction(nodes_topics){
 	var $topics = $("#topics");
-  	var $expect_like_comic = $(".center");//中央に提示されるコミック
-    var pos = $expect_like_comic.position();
-    var centerX = pos.left;//中央のコミックのX座標
-    var centerY = pos.top;//中央のコミックのY座標
-
   	for (var i = 0; i < nodes_topics.length; i++){
   		var $each_topics = nodes_topics[i];
   		$topics.append($each_topics);	
   		$each_topics.css({
-  			left:centerX,
-			top:centerY,
+  			left:window_center_posX,
+			top:window_center_posY,
 			zIndex:"1",
   		})
 	}
@@ -196,51 +183,79 @@ function DrawFunction(nodes_topics){
   		var $hoge = nodes_topics_area[i];
   		$topics_area.append($hoge);	
   		$hoge.css({
-  			left:centerX-100,
-			top:centerY-100,
+  			left:window_center_posX-100,
+			top:window_center_posY-100,
 			zIndex:"-1",
   		})
 	}
 }
 
-
-////////////////////////////////////////////
-//topicのデータと作品のデータ読み込み
-////////////////////////////////////////////
-
 function Selected(num,max){
 	selected_num = [];
-	for (var i = 0; i< num; i++){
+	for (var i = 0; i < num; i++){
     	var candidate = Math.floor(Math.random()*num);
-    	if ($.inArray(candidate,selected_num) == -1){
-      		selected_num.push(candidate);  
-    	}else{
-    	  	continue
-    	}
-    	if (selected_num.length > max){
-      		break
-    	}
+    	L: if ($.inArray(candidate,selected_num) == -1){
+      		if (selected_num.length < max){
+      			selected_num.push(candidate);
+      		}else{
+      			break L
+      		}
+      	}else{
+      		i = i - 1;
+		}
 	}
+
 	return selected_num
 }
 
+
+var window_center_posX = $(window).width()/2;
+var window_center_posY = $(window).height()/2;
+
 $(function(){
+	////////////////////////////////////////////
+	//topicのデータと作品のデータ読み込み
+	////////////////////////////////////////////
  	topic_data = LoadTopicJson();
  	comic_data = LoadComicJson();
 
 	$(document).on("click","#input_button",function(){
-	  	var selected_comic = ExpectLikeComic();
-	  	var selected_comic_gernes = SelectedComicGenres(selected_comic[0],comic_data).genres;
-	  	// console.log(selected_comic_gernes)
+		
+		var selected_comic_title = $("textarea[name='titles']").val();
+		var recommend = $("#recommend");
+                var $node = $("<div>").text(selected_comic_title).attr("class","center");
+                recommend.append($node);//centerの画面表示   
+                $(".center").css({
+                	//"background-color":"blue"
+                	"background-image":"url(../~artuhr0912/image/"+ selected_comic_title +".jpg)"
+        })
+
+		var selected_comic_gernes = []
+		for (var i = 0; i < comic_data.length; i++){
+			if (comic_data[i].title.indexOf(selected_comic_title) !== -1){
+				selected_comic_gernes.push(comic_data[i].genres)
+			}
+		}
+		
+		//////////////////////////////////////////////////////////
+		//input dataをコサイン類似度で求めたい場合ExpectLikeComicを使う
+		//////////////////////////////////////////////////////////
+	  	
 	  	related_topics = []//共起する語が含まれるtopic
 	  	for (var i = 0 ; i < topic_data.length; i++){
-	  		for (var j = 0; j < selected_comic_gernes.length; j++){
-	  			if ($.inArray(selected_comic_gernes[j],topic_data[i].genre) !== -1){
-	  				related_topics.push(topic_data[i].genre)
-	  				break;
+	  		var count = 0;
+	  		for (var j = 0; j < selected_comic_gernes[0].length; j++){
+	  			if ($.inArray(selected_comic_gernes[0][j],topic_data[i].genre) !== -1){
+	  				if (count > 0){                                                               //共起トピック数判定
+	  					related_topics.push(topic_data[i].genre)
+	  					break;
+	  				}else{
+	  					count = count + 1; 
+	  				}
 	  			}
 	  		}
 	  	}
+
 	  	//提示されるトピックの数が多すぎる可能性があるので最大数を6に設定
 	  	selected_topics = []
 	  	selected_topic_num = Selected(related_topics.length,6)

@@ -1,4 +1,4 @@
-function SplitWords(topic_word_list){
+function SplitWords(topic_word_list){//トピックを表示する際の単語間の間隔調整
 	split_topic_word_list = [];
 	for(var i = 0; i < topic_word_list.length; i++){
 		split_topic_word_list.push(" " + topic_word_list[i] + " ")
@@ -10,14 +10,14 @@ function SplitWords(topic_word_list){
 //各トピックのマウスイベント処理(バルーン)
 ////////////////////////////////////////////
 
-$(document).on("mouseover",".topic",function(){
+$("#topics").on("mouseover",".topic",function(){
 	var split_topic_word = SplitWords($(this).text().split(","))
 	$(this).showBalloon({
 		contents:"<div id = balloon_tipic>" + split_topic_word_list + "</div>",
 		css:{
 			fontSize:"24px",
 			width:"500px",
-			backgroundColor:"#CCFFFF"
+			backgroundColor:"#CCFFFF"//青系当
 		}
 	});
 })
@@ -39,21 +39,26 @@ $(document).on("mouseover",".related_comic",function(){
 		}
 	} 
 	var split_topic_word = SplitWords(match_data[0].genres)
+	$(this).css({
+			position:"absolute",
+			zIndex:"2"
+	})
+	$(".related_comic").not(this).css({
+		position:"absolute",
+		zIndex:"1"
+	})
 
 	$(this).showBalloon({
 		contents:"<div id = balloon_related><div id = balloon_title>" + match_data[0].title + "</div><br>" + split_topic_word + "</div>",
 		css:{
 			width:"500px",
-			backgroundColor:"#FFCCFF",
-
+			backgroundColor:"#FFCCFF"	
 		}
 	});
 	$(this).animate({
 		width:"153.6px",
 		height:"218.4px"
 	},"500");
-
-
 })
 
 $(document).on("mouseout",".related_comic",function(){
@@ -69,6 +74,7 @@ $(document).on("mouseout",".related_comic",function(){
 ////////////////////////////////////////////
 
 $(document).on("mouseover",".center",function(){
+	console.log($(this).text())
 	match_data = [];
 	for (var i = 0; i < comic_data.length; i++){
 		if ($(this).text().indexOf(comic_data[i].title) !== -1){
@@ -82,15 +88,30 @@ $(document).on("mouseover",".center",function(){
 		css:{
 			width:"500px",
 			backgroundColor:"#F8DC85",
-			fontColor:"black"
+			fontColor:"black",
 		}
 	});
+	$(this).css({
+			position:"absolute",
+			zIndex:"100"
+
+	})
+	$(this).animate({
+		width:"153.6px",
+		height:"218.4px"
+	},"500");
+
 })
+
 
 $(document).on("mouseout",".center",function(){
 	$(this).hideBalloon();
-})
+	$(this).animate({
+		width:"64px",
+		height:"91px"
+	},"500");
 
+})
 
 ////////////////////////////////////////////
 //選択履歴部分のイベント処理(バルーン)
@@ -115,11 +136,6 @@ $(document).on("mouseover",".histories",function(){
 	});	
 })
 
-
 $(document).on("mouseout",".histories",function(){
 	$(this).hideBalloon();
 })
-
-
-
-

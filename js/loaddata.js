@@ -1,7 +1,7 @@
 function LoadTopicJson(){
   json_data = [];
   $.ajax({
-    url:"../~artuhr0912/data/topic_test.json",//test.json
+    url:"../~artuhr0912/data/topic_stop.json",//topics
     dateType: "json",
     async:false,
     data:{"data" : "data"}
@@ -22,7 +22,7 @@ function LoadTopicJson(){
 function LoadComicJson(){
   json_data = [];
   $.ajax({
-    url:"../~artuhr0912/data/output.json",//tfidf_data.json
+    url:"../~artuhr0912/data/output_stop.json",//output//tfidf_data.json
     dataType:"json",
     async:false,
     data:{"data":"data"}
